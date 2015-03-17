@@ -1,0 +1,71 @@
+<ion-view view-title="Socket.IO Chat Demo" ng-controller="ChatController as chatCtrl" class="light-grey">
+  <ion-header-bar>
+    <img class="heading_logo" src="img/rehash_icon.svg" >
+    <span class="heading-right">
+      {{nickname}}'s Score: <span class="hash">{{chatCtrl.score}}</span>
+    </span>
+  </ion-header-bar>
+
+  <ion-content>
+    <md-content layout="column"
+                layout-align="center center" ng-if="chatCtrl.tweet">
+    <div class="tweet"
+       layout="column"
+       layout-align="center center">
+      <img class="tweet-img" ng-src="{{chatCtrl.tweet.image}}"/>
+      <div>@{{chatCtrl.tweet.screen_name}} <br> {{chatCtrl.tweet.content}}</div>
+    </div>
+
+    <!-- Is this person a judge? -->
+    <md-list ng-if="chatCtrl.isJudge">
+      <h3 class="voting-status-thing">You Are Judging:</h3>
+      <md-item ng-repeat="hashtag in chatCtrl.hashTags" layout="column">
+      <md-button class="md-accent" data="{{chatCtrl.hashtag}}" ng-click="chatCtrl.voteForHashtag(hashtag)" ng-disabled="{{chatCtrl.hashtag.disabled}}">
+        <!--<md-item-content>-->
+        <!--<div class="md-tile-content">-->
+          <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
+        <!--</div>-->
+        <!--</md-item-content>-->
+      </md-button>
+      </md-item>
+    </md-list>
+
+    <!-- is this person a player? -->
+    <md-list ng-if="chatCtrl.hasntVoted && !chatCtrl.isJudge">
+      <h3 class="voting-status-thing"><span class="hash">Re</span>Hash It:</h3>
+      <md-item ng-repeat="hashtag in chatCtrl.hashTags" layout="column">
+      <md-button class="md-accent" data="{{chatCtrl.hashtag}}" ng-click="chatCtrl.submitHashtag(hashtag)">
+        <!--<md-item-content>-->
+        <!--<div class="md-tile-content">-->
+          <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
+        <!--</div>-->
+        <!--</md-item-content>-->
+      </md-button>
+      </md-item>
+    </md-list>
+
+    </md-content>
+
+    <div class="list light-grey bottommsg" ng-if="!chatCtrl.gameStarted">
+      <md-list ng-if="!chatCtrl.gameStarted">
+        <!--<md-list ng-if="chatCtrl.test">-->
+        <h3 class="voting-status-thing">Users in Lobby</h3>
+        <md-item ng-repeat="user in chatCtrl.users" layout="column">
+            <md-item-content>
+              <div class="md-tile-content user-list-name">
+                <h3 class="user">{{user}}</h3>
+              </div>
+            </md-item-content>
+        </md-item>
+      </md-list>
+
+      <div layout="column"
+           layout-align="center center"
+           class="item item-input-inset light-grey start-game-thingy">
+        <md-button ng-click="chatCtrl.startGame()"
+                   class="md-raised md-accent"
+                   type="submit">Start Game</md-button>
+      </div>
+    </div>
+    </ion-content>
+ </ion-view>

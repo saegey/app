@@ -1,0 +1,28 @@
+<ion-view ng-controller="LoginController as logcntrl">
+  <ion-content>
+    <div layout="column"
+         layout-align="center center">
+
+      <img class="login-logo" src="../img/rehash_icon.png" alt=""/>
+
+      <form name="nameForm"
+            novalidate
+            ng-submit="submitName()">
+
+        <md-input-container flex>
+          <label>Name</label>
+          <input id="first_name"
+                 type="text"
+                 placeholder="Name"
+                 ng-model="logcntrl.nickname">
+        </md-input-container>
+
+        <div layout="column">
+          <md-button ng-click="logcntrl.join()"
+                     class="md-raised md-accent"
+                     type="submit">Play</md-button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>
