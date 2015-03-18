@@ -17,12 +17,14 @@ var chat = app.controller('ChatController', function(
 
     socket.on('connect',function(){
       //Add user
-      socket.emit('add user', $stateParams.nickname);
+      socket.emit('join lobby', $stateParams.nickname);
       $scope.nickname = $stateParams.nickname;
       // On login display welcome message
       socket.on('login', function (data) {
         //Set the value of connected flag
         self.connected = true;
+        self.users = data.users;
+        console.log('login:users-online: ', data.users);
       });
     });
 
@@ -66,10 +68,18 @@ var chat = app.controller('ChatController', function(
       self.voteEnabled = true;
     });
 
+    socket.on('send to lobby', function (data) {
+      self.gameStarted = false;
+      self.isJudge = false;
+      self.hashTags = [];
+      self.tweet = false;
+      console.log('send to lobby: ', data);
+    });
+
     self.startGame = function() {
       // Start Game
       console.log('start game');
-      socket.emit('new round', function (data) {
+      socket.emit('new round', function () {
         self.gameStarted = true;
       });
     };

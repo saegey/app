@@ -61,28 +61,25 @@ io.on('connection', function (socket) {
   }
 
   function startGame(socket) {
-    console.log(usernames);
     judge = getNewJudge();
-    console.log('judge is' + judge);
+    console.log('judge:', judge);
+    console.log('players in the game: ', usernames);
 
     tweetSvc.getRandomTweet(function (tweets) {
       var rand = Math.floor((Math.random() * tweets.length) + 1);
       tweet = tweets[Math.floor(Math.random()*tweets.length)];
 
-      console.log(tweet);
+      console.log('tweet retrieved:', tweet);
       hash_tag_by_user = [];
       numHashtags = usernames.length * 5;
       hashTagSvc.getHashTags(5, function(userHashTags) {
         console.log("retrieving hashtags");
-        console.log("users", usernames);
         hash_tag_by_user = {};
+
         usernames.forEach(function (username, index) {
           var start = (index * 5) + 1;
-          console.log(username);
           hash_tag_by_user[username] = userHashTags.slice(start, start + 5);
         });
-
-        console.log("hashtags", hash_tag_by_user);
 
         socket.broadcast.emit('start round', {
           tweet: tweet,
@@ -98,7 +95,7 @@ io.on('connection', function (socket) {
       });
     });
   }
-  var addedUser = false;
+
   // when the client emits 'new message', this listens and executes
   socket.on('submit hashtag', function (data) {
     // we tell the client to execute 'new message'
@@ -118,31 +115,27 @@ io.on('connection', function (socket) {
   });
 
   socket.on('new round', function (data) {
-    gameStarted = true;
+    console.log('new round');
     startGame(socket);
   });
 
-  socket.on('add user', function (username) {
+  socket.on('join lobby', function (username) {
     socket.username = username;
-    console.log('add user ' + username);
+    console.log('user joined lobby:', username);
     // add the client's username to the global list
     usernames.push(username);
     numUsers++;
-    addedUser = true;
+
     socket.emit('login', {
       numUsers: numUsers,
-      tweet: tweet
+      users: usernames
     });
-
-    gameStarted = true;
 
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user list', {users: usernames});
-    socket.emit('user list', {users: usernames});
   });
 
   socket.on('debug', function () {
-    console.log('debug');
     socket.emit('receive debug', {
       usernames: usernames,
       gameStarted: gameStarted,
@@ -163,19 +156,20 @@ io.on('connection', function (socket) {
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
     // remove the username from global usernames list
-    if (addedUser) {
-      usernames.remove(socket.username);
-      numUsers--;
-      if (socket.username === judge) {
-        startGame(socket);
-      }
+    usernames.remove(socket.username);
+    numUsers--;
 
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
+    if (numUsers === 1) {
+      socket.broadcast.emit('send to lobby', usernames);
+    } else if (socket.username === judge) {
+      startGame(socket);
     }
+
+    // echo globally that this client has left
+    socket.broadcast.emit('user left', {
+      username: socket.username,
+      numUsers: numUsers
+    });
   });
 });
 
