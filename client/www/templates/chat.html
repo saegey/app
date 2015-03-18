@@ -5,7 +5,7 @@
     <img class="heading_logo"
          src="img/rehash_icon.svg" >
     <span class="heading-right">
-      {{nickname}}'s Score: <span class="hash">{{chatCtrl.score}}</span>
+      {{nickname}}'s Score: <span class="hash">{{gameState.score}}</span>
     </span>
   </ion-header-bar>
 
@@ -14,39 +14,47 @@
     <!-- GAME PARTIAL -->
     <md-content layout="column"
                 layout-align="center center"
-                ng-if="chatCtrl.tweet">
+                ng-show="gameState.tweet">
 
       <!-- TWEET PARTIAL -->
       <div class="tweet"
          layout="column"
          layout-align="center center">
         <img class="tweet-img"
-             ng-src="{{chatCtrl.tweet.image}}" />
-        <div>@{{chatCtrl.tweet.screen_name}} <br> {{chatCtrl.tweet.content}}</div>
+             ng-src="{{gameState.tweet.image}}" />
+        <div>@{{gameState.tweet.screen_name}} <br> {{gameState.tweet.content}}</div>
       </div>
 
       <!-- JUDGE PARTIAL -->
-      <md-list ng-if="chatCtrl.isJudge">
-        <h3 class="voting-status-thing">You Are Judging:</h3>
-        <md-item ng-repeat="hashtag in chatCtrl.hashTags track by $index"
-                 layout="column">
-          <md-button class="md-accent"
-                     data="{{chatCtrl.hashtag}}"
-                     ng-click="chatCtrl.voteForHashtag(hashtag)"
-                     ng-disabled="{{chatCtrl.hashtag.disabled}}">
-            <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
-          </md-button>
-        </md-item>
-      </md-list>
+      <div ng-show="gameState.isJudge">
+        <h3 class="voting-status-thing"
+            ng-show="!gameState.voteEnabled">Waiting for Votes</h3>
+
+        <div ng-show="gameState.voteEnabled">
+          <h3 class="voting-status-thing">You Are Judging:</h3>
+          <md-list>
+            <md-item ng-repeat="hashtag in gameState.hashTags track by $index"
+                     layout="column">
+              <md-button class="md-accent"
+                         data="{{gameState.hashtag}}"
+                         ng-click="gameState.voteForHashtag(hashtag)"
+                         ng-disabled="{{gameState.hashtag.disabled}}">
+                <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
+              </md-button>
+            </md-item>
+          </md-list>
+        </div>
+      </div>
+
 
       <!-- PLAYER PARTIAL -->
-      <md-list ng-if="chatCtrl.hasntVoted && !chatCtrl.isJudge">
+      <md-list ng-show="gameState.hasntVoted && !gameState.isJudge">
         <h3 class="voting-status-thing"><span class="hash">Re</span>Hash It:</h3>
-        <md-item ng-repeat="hashtag in chatCtrl.hashTags track by $index"
+        <md-item ng-repeat="hashtag in gameState.hashTags track by $index"
                  layout="column">
           <md-button class="md-accent"
-                     data="{{chatCtrl.hashtag}}"
-                     ng-click="chatCtrl.submitHashtag(hashtag)">
+                     data="{{gameState.hashtag}}"
+                     ng-click="gameState.submitHashtag(hashtag)">
             <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
           </md-button>
         </md-item>
@@ -54,10 +62,10 @@
     </md-content>
 
     <!-- LOBBY PARTIAL -->
-    <div class="list light-grey bottommsg" ng-if="!chatCtrl.gameStarted">
-      <md-list ng-if="!chatCtrl.gameStarted">
+    <div class="list light-grey bottommsg" ng-show="!gameState.gameStarted">
+      <md-list ng-show="!gameState.gameStarted">
         <h3 class="voting-status-thing">Users in Lobby</h3>
-        <md-item ng-repeat="user in chatCtrl.users track by $index"
+        <md-item ng-repeat="user in gameState.users track by $index"
                  layout="column">
             <md-item-content>
               <div class="md-tile-content user-list-name">
@@ -70,7 +78,7 @@
       <div layout="column"
            layout-align="center center"
            class="item item-input-inset light-grey start-game-thingy">
-        <md-button ng-click="chatCtrl.startGame()"
+        <md-button ng-click="gameState.startGame()"
                    class="md-raised md-accent"
                    type="submit">Start Game</md-button>
       </div>
