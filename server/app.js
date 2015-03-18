@@ -36,6 +36,7 @@ var tweet = null;
 var gameStarted = false;
 var hash_tag_by_user= null;
 var numHashtags = null;
+var scores = [];
 
 var TWEET_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=625026020&format=csv";
 var HASHTAG_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=0&format=csv";
@@ -60,7 +61,7 @@ io.on('connection', function (socket) {
     return usernames[~~(Math.random() * usernames.length)];
   }
 
-  function startGame(socket) {
+  function startRound(socket) {
     judge = getNewJudge();
     console.log('judge:', judge);
     console.log('players in the game: ', usernames);
@@ -84,16 +85,28 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('start round', {
           tweet: tweet,
           hashtags: hash_tag_by_user,
-          judge: judge
+          judge: judge,
+          scores: scores
         });
         // socket.in(socket.user.uuid).emit('new_msg', {msg: 'hello'});
         socket.emit('start round', {
           tweet: tweet,
           hashtags: hash_tag_by_user,
-          judge: judge
+          judge: judge,
+          scores: scores
         });
       });
     });
+  }
+
+  function startGame(socket) {
+    scores = [];
+
+    usernames.forEach(function (username, index) {
+      scores.push({username: username, score: 0});
+    });
+
+    startRound(socket);
   }
 
   // when the client emits 'new message', this listens and executes
@@ -150,7 +163,13 @@ io.on('connection', function (socket) {
       username: data.username
     });
     hashTags = [];
-    startGame(socket);
+    scores.forEach(function(userScore) {
+      console.log(userScore);
+      if (userScore.username === data.username) {
+        userScore.score++;
+      }
+    });
+    startRound(socket);
   });
 
   // when the user disconnects.. perform this
@@ -162,7 +181,7 @@ io.on('connection', function (socket) {
     if (numUsers === 1) {
       socket.broadcast.emit('send to lobby', usernames);
     } else if (socket.username === judge) {
-      startGame(socket);
+      startRound(socket);
     }
 
     // echo globally that this client has left
