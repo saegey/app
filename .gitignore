@@ -7,3 +7,9 @@ dist
 /server/config/local.env.js
 plugins
 npm-debug.log
+
+/.idea
+client/.idea
+client/platforms
+client/www/lib
+client/www/css
