@@ -32,46 +32,51 @@ var chat = app.controller('ChatController', function(
       self.users = data.users;
     });
 
-	  // Whenever the server emits 'new message', update the chat body
-	  socket.on('new message', function (data) {
-	   	//addMessageToList(data.username,true,data.message);
-	  });
+    // Whenever the server emits 'new message', update the chat body
+    socket.on('new message', function (data) {
+      //addMessageToList(data.username,true,data.message);
+    });
 
-	  // Whenever the server emits 'user left', log it in the chat body
-	  socket.on('user left', function (data) {
-	    //addMessageToList(data.username,false,self.message);
-	  });
+    // Whenever as user leaves
+    socket.on('user left', function (data) {
+      console.log('user left', data);
+    });
 
-  	socket.on('send hashtag to subscribers', function (data) {
-		  self.hashTags.push(data);
+
+    socket.on('send hashtag to judge', function (data) {
+      if ($stateParams.nickname === self.judge) {
+        console.log('judge received hashtag', data);
+        self.hashTags.push(data);
+      }
     });
 
     // Lets us know who the winner is
-  	socket.on('send winner of round', function (data) {
-  	    console.log('winner is: ', data.username);
-        if ($stateParams.nickname === data.username) {
-          console.log('you won that round my friend');
-          self.score++;
-        }
-  	});
+    socket.on('send winner of round', function (data) {
+      if ($stateParams.nickname === data.username) {
+        console.log('you won that round my friend');
+        self.score++;
+      } else {
+        console.log('winner is: ', data.username);
+      }
+    });
 
     // Judge is now able to vote
-  	socket.on('judge is now voting', function (data) {
-  		console.log('judge is now voting');
+    socket.on('judge is now voting', function (data) {
+      console.log('judge is now voting');
       self.voteEnabled = true;
-  	});
+    });
 
-  	self.startGame = function() {
+    self.startGame = function() {
       // Start Game
-  		console.log('start game');
-
+      console.log('start game');
       socket.emit('new round', function (data) {
-    		self.gameStarted = true;
-  		});
-  	};
+        self.gameStarted = true;
+      });
+    };
 
     // sets up round and check for who is the judge
-  	socket.on('start round', function (data) {
+    socket.on('start round', function (data) {
+      console.log('data received "start round"', data);
       self.judge = data.judge;
       self.hasntVoted = true;
       self.gameStarted = true;
@@ -79,39 +84,34 @@ var chat = app.controller('ChatController', function(
       if ($stateParams.nickname === self.judge) {
         self.hashTags = [];
         self.isJudge = true;
-        console.log('judge' + self.hashTags);
+        console.log('your are the judge');
       } else {
-      	self.hashTags = data.hashtags[$stateParams.nickname];
+        self.hashTags = data.hashtags[$stateParams.nickname];
         self.isJudge = false;
-        console.log('judge' + self.hashTags);
+        console.log('judge is ' + self.judge);
       }
       self.tweet = data.tweet;
     });
 
     // Player submits hashtag
     self.submitHashtag = function (hashtag) {
-      console.log('$stateParams.nickname', $stateParams.nickname);
       // Makes judge not able to vote yet
       self.voteEnabled = false;
       hashtag.username = $stateParams.nickname;
-
-      socket.emit('send hashtag', hashtag);
-
+      socket.emit('submit hashtag', hashtag);
       self.hasntVoted = false;
-
-      console.log('voted hashtag' + hashtag);
+      console.log('data sent "submit hashtag"', hashtag);
     };
 
     self.voteForHashtag = function (hashtag) {
       // Can the the judge vote?
-    	if (self.voteEnabled) {
-    		socket.emit('end round', {
-        	username: hashtag.username
+      if (self.voteEnabled) {
+        socket.emit('end round', {
+          username: hashtag.username
         });
-    	} else {
-    		console.log('not all votes are in');
-    	}
-
+      } else {
+        console.log('not all votes are in');
+      }
     };
 });
 

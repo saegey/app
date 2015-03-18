@@ -1,13 +1,12 @@
 
-# Rehash Backend Service
+# Rehash
 
 ## How to use
 
 ```
-$ npm install
-$ node .
+$ ./develop.sh
 ```
 
-And point your browser to `http://localhost:3000`. Optionally, specify
+And point your browser to `http://localhost:5000`. Optionally, specify
 a port by supplying the `PORT` env variable.
 

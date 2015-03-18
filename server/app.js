@@ -73,7 +73,7 @@ io.on('connection', function (socket) {
       hash_tag_by_user = [];
       numHashtags = usernames.length * 5;
       hashTagSvc.getHashTags(5, function(userHashTags) {
-        console.log("hashtags", userHashTags);
+        console.log("retrieving hashtags");
         console.log("users", usernames);
         hash_tag_by_user = {};
         usernames.forEach(function (username, index) {
@@ -100,10 +100,10 @@ io.on('connection', function (socket) {
   }
   var addedUser = false;
   // when the client emits 'new message', this listens and executes
-  socket.on('send hashtag', function (data) {
+  socket.on('submit hashtag', function (data) {
     // we tell the client to execute 'new message'
     data.judge = judge;
-    socket.broadcast.emit('send hashtag to subscribers', data);
+    socket.broadcast.emit('send hashtag to judge', data);
 
     hashTags.push(data);
     console.log("hashtags " + hashTags.length);
@@ -135,12 +135,6 @@ io.on('connection', function (socket) {
     });
 
     gameStarted = true;
-
-    if (tweet) {
-      socket.emit('show tweet', {
-        tweet: tweet
-      });
-    }
 
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user list', {users: usernames});
