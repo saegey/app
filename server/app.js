@@ -163,12 +163,13 @@ io.on('connection', function (socket) {
       username: data.username
     });
     hashTags = [];
+
     scores.forEach(function(userScore) {
-      console.log(userScore);
       if (userScore.username === data.username) {
         userScore.score++;
       }
     });
+    console.log("scores: ", scores);
     startRound(socket);
   });
 
