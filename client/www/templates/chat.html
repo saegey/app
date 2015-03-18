@@ -28,13 +28,12 @@
       <!-- JUDGE PARTIAL -->
       <md-list ng-if="chatCtrl.isJudge">
         <h3 class="voting-status-thing">You Are Judging:</h3>
-        <md-item ng-repeat="hashtag in chatCtrl.hashTags track by $index"
+        <md-item ng-repeat="userHashTag in chatCtrl.hashTags track by $index"
                  layout="column">
           <md-button class="md-accent"
-                     data="{{chatCtrl.hashtag}}"
-                     ng-click="chatCtrl.voteForHashtag(hashtag)"
-                     ng-disabled="{{chatCtrl.hashtag.disabled}}">
-            <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
+                     data="{{chatCtrl.userHashTag}}"
+                     ng-click="chatCtrl.voteForHashtag(userHashTag)">
+            <h3 class="hashtag"><span class="hash">#</span>{{userHashTag.hashtag.content}}</h3>
           </md-button>
         </md-item>
       </md-list>

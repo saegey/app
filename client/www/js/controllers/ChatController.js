@@ -54,6 +54,7 @@ var chat = app.controller('ChatController', function(
 
     // Lets us know who the winner is
     socket.on('send winner of round', function (data) {
+      console.log("received winner data: ", data);
       if ($stateParams.nickname === data.username) {
         console.log('you won that round my friend');
         self.score++;
@@ -68,13 +69,13 @@ var chat = app.controller('ChatController', function(
       self.voteEnabled = true;
     });
 
-    socket.on('send to lobby', function (data) {
-      self.gameStarted = false;
-      self.isJudge = false;
-      self.hashTags = [];
-      self.tweet = false;
-      console.log('send to lobby: ', data);
-    });
+    // socket.on('send to lobby', function (data) {
+    //   self.gameStarted = false;
+    //   self.isJudge = false;
+    //   self.hashTags = [];
+    //   self.tweet = false;
+    //   console.log('send to lobby: ', data);
+    // });
 
     self.startGame = function() {
       // Start Game
@@ -108,20 +109,17 @@ var chat = app.controller('ChatController', function(
       // Makes judge not able to vote yet
       self.voteEnabled = false;
       hashtag.username = $stateParams.nickname;
-      socket.emit('submit hashtag', hashtag);
+      socket.emit('submit hashtag', {
+        hashtag: hashtag,
+        username: $stateParams.nickname
+      });
       self.hasntVoted = false;
       console.log('data sent "submit hashtag"', hashtag);
     };
 
     self.voteForHashtag = function (hashtag) {
-      // Can the the judge vote?
-      if (self.voteEnabled) {
-        socket.emit('end round', {
-          username: hashtag.username
-        });
-      } else {
-        console.log('not all votes are in');
-      }
+      console.log('vote for hashtag sent', hashtag);
+      socket.emit('end round', hashtag);
     };
 });
 
