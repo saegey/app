@@ -75,6 +75,7 @@ var chat = app.controller('ChatController', function(
       console.log('start game');
       socket.emit('new round', function () {
         $scope.gameState.gameStarted = true;
+        $scope.gameState.voteEnabled = false;
       });
     };
 
