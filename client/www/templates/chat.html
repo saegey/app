@@ -37,9 +37,8 @@
                      layout="column">
               <md-button class="md-accent"
                          data="{{gameState.hashtag}}"
-                         ng-click="gameState.voteForHashtag(hashtag)"
-                         ng-disabled="{{gameState.hashtag.disabled}}">
-                <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
+                         ng-click="gameState.voteForHashtag(hashtag)">
+                <h3 class="hashtag"><span class="hash">#</span>{{hashtag.hashtag.content}}</h3>
               </md-button>
             </md-item>
           </md-list>

@@ -159,8 +159,14 @@ io.on('connection', function (socket) {
   });
 
   socket.on('end round', function (data) {
+    console.log('end round', data);
     socket.broadcast.emit('send winner of round', {
-      username: data.username
+      username: data.username,
+      hashtag: data.hashtag
+    });
+    socket.emit('send winner of round', {
+      username: data.username,
+      hashtag: data.hashtag
     });
     hashTags = [];
 

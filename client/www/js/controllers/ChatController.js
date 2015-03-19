@@ -46,6 +46,7 @@ var chat = app.controller('ChatController', function(
 
     // Lets us know who the winner is
     socket.on('send winner of round', function (data) {
+      console.log("received winner data: ", data);
       $scope.gameState.voteEnabled = false;
 
       if ($stateParams.nickname === data.username) {
@@ -62,13 +63,13 @@ var chat = app.controller('ChatController', function(
       $scope.gameState.voteEnabled = true;
     });
 
-    socket.on('send to lobby', function (data) {
-      $scope.gameState.gameStarted = false;
-      $scope.gameState.isJudge = false;
-      $scope.gameState.hashTags = [];
-      $scope.gameState.tweet = false;
-      console.log('send to lobby: ', data);
-    });
+    //socket.on('send to lobby', function (data) {
+    //  $scope.gameState.gameStarted = false;
+    //  $scope.gameState.isJudge = false;
+    //  $scope.gameState.hashTags = [];
+    //  $scope.gameState.tweet = false;
+    //  console.log('send to lobby: ', data);
+    //});
 
     $scope.gameState.startGame = function() {
       // Start Game
@@ -104,20 +105,18 @@ var chat = app.controller('ChatController', function(
       // Makes judge not able to vote yet
       $scope.gameState.voteEnabled = false;
       hashtag.username = $stateParams.nickname;
-      socket.emit('submit hashtag', hashtag);
       $scope.gameState.hasntVoted = false;
+      socket.emit('submit hashtag', {
+        hashtag: hashtag,
+        username: $stateParams.nickname
+      });
+      self.hasntVoted = false;
       console.log('data sent "submit hashtag"', hashtag);
     };
 
     $scope.gameState.voteForHashtag = function (hashtag) {
-      // Can the the judge vote?
-      if ($scope.gameState.voteEnabled) {
-        socket.emit('end round', {
-          username: hashtag.username
-        });
-      } else {
-        console.log('not all votes are in');
-      }
+      console.log('vote for hashtag sent', hashtag);
+      socket.emit('end round', hashtag);
     };
 });
 
