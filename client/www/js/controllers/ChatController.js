@@ -3,7 +3,9 @@ var chat = app.controller('ChatController', function(
   $stateParams,
   socket,
   $sanitize,
-  $ionicScrollDelegate) {
+  $ionicScrollDelegate,
+  $mdSidenav,
+  $mdToast) {
 
     $scope.gameState = {
       'hasntVoted'  : true,
@@ -14,8 +16,53 @@ var chat = app.controller('ChatController', function(
       'judge'       : null,
       'voteEnabled' : false,
       'isJudge'     : false,
-      'tweet'       : null
+      'tweet'       : null,
+      'chat'        : [],
+      'unreadChats' : 0
     };
+
+    $scope.toggleChat = function() {
+      $mdSidenav('right').toggle()
+        .then(function (){
+          console.log('chat toggled, clearing queue');
+          $scope.gameState.unreadChats = 0;
+
+          if ($scope.gameState.chat.length === 0) {
+            socket.emit('initialize chat');
+          }
+        });
+    };
+
+    $scope.sendChat = function(message) {
+      $scope.chatText = '';
+
+      socket.emit('chat message sent', {
+        'user'    : $stateParams.nickname,
+        'message' : message
+      })
+    };
+
+    socket.on('set chat state', function(data) {
+      console.log('set chat state');
+      $scope.gameState.chat = data.chat;
+    });
+
+    socket.on('chat update', function(data) {
+      $scope.gameState.chat = data.chat;
+
+      if ($mdSidenav('right').isOpen()) {
+        $scope.gameState.unreadChats = 0;
+      } else {
+        $scope.gameState.unreadChats++;
+
+        var msg = data.chat[data.chat.length - 1];
+
+        $mdToast.show(
+          $mdToast.simple()
+            .content(msg.user + ' : ' + msg.message)
+        );
+      }
+    });
 
     socket.on('connect',function(){
       //Add user
