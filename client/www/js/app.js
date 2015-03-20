@@ -8,7 +8,8 @@ var app=angular.module('rehash-app',
     'ngSanitize',
     'btford.socket-io',
     'ngMaterial',
-    'ngTouch'
+    'ngTouch',
+    'luegg.directives'
   ])
 
 .run(function($ionicPlatform) {

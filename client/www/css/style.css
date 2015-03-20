@@ -42,13 +42,7 @@
 }
 
 .header_score {
-//  align-self:
-}
 
-.heading-right {
-  right: 5px;
-  position: absolute;
-  top: 11px;
 }
 
 .voting-status-thing {
@@ -61,6 +55,12 @@
   margin-bottom: 10px !important;
 }
 
+.user-score {
+  margin-left: 10px;
+  font-size: 32px;
+  line-height: 32px;
+}
+
 .user-list-name {
   text-align: center !important;
   padding: 5px !important;
@@ -70,3 +70,71 @@
   padding-top: 10px;
   margin-top: 10px;
 }
+
+.chat-button-container {
+  font-size: 14px;
+  right: 5px;
+  position: absolute;
+}
+
+.chat-button {
+  display: flex;
+}
+
+.chat-button-indicator {
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  margin-left: 4px;
+  border-radius: 100%;
+  background: rgb(69, 187, 145);
+  color: white;
+}
+
+.chat-sidenav {
+  height: 100%;
+}
+
+.chat-toolbar {
+  background-color: rgb(69, 187, 145) !important;
+  min-height: 44px;
+  padding: 5px;
+}
+
+.chat-input-wrapper {
+  border: 1px solid black;
+  display: flex;
+  height: 45px;
+}
+
+.chat-input {
+  flex: 1 0 auto;
+  font-size: 16px !important;
+  height: 100% !important;
+  line-height: 40px;
+  text-indent: 10px;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 44px); /* subtract min-height on toolbar */
+}
+
+.chat-history {
+  flex: 100 1 auto;
+  height: 100%;
+  overflow: scroll;
+  padding-top: 0;
+  padding-bottom: 5px;
+}
+
+.chat-form {
+  flex: 1 0 auto;
+  height: 47px;
+}
+
+

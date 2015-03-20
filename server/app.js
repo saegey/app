@@ -37,6 +37,7 @@ var gameStarted = false;
 var hash_tag_by_user= null;
 var numHashtags = null;
 var scores = [];
+var chat = [];
 
 var TWEET_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=625026020&format=csv";
 var HASHTAG_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=0&format=csv";
@@ -197,6 +198,26 @@ io.on('connection', function (socket) {
       numUsers: numUsers
     });
   });
+
+  socket.on('chat message sent', function(message) {
+    chat.push(message);
+
+    socket.emit('chat update', {
+      'chat' : chat
+    });
+
+    socket.broadcast.emit('chat update', {
+      'chat' : chat
+    });
+  });
+
+  socket.on('initialize chat', function() {
+
+    socket.emit('set chat state', {
+      'chat' : chat
+    })
+  });
+
 });
 
 // Start server
