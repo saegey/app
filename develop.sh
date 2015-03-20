@@ -2,6 +2,6 @@
 
 npm install
 
-bower install
+cd client && bower install
 
-foreman start -f Procfile.development
+cd .. && foreman start -f Procfile.development
