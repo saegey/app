@@ -11,13 +11,13 @@ var express = require('express');
 var config = require('./config/environment');
 
 // Populate DB with sample data
-if(config.seedDB) { require('./config/seed'); }
+if (config.seedDB) { require('./config/seed'); }
 
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var sys = require('sys')
+var sys = require('sys');
 var exec = require('child_process').exec;
 require('./config/socketio')(io);
 require('./config/express')(app);
@@ -34,10 +34,11 @@ var hashTags = [];
 var judge = null;
 var tweet = null;
 var gameStarted = false;
-var hash_tag_by_user= null;
+var hash_tag_by_user = null;
 var numHashtags = null;
 var scores = [];
 var chat = [];
+var lastRoundWinner = null;
 
 var TWEET_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=625026020&format=csv";
 var HASHTAG_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=0&format=csv";
@@ -68,13 +69,12 @@ io.on('connection', function (socket) {
     console.log('players in the game: ', usernames);
 
     tweetSvc.getRandomTweet(function (tweets) {
-      var rand = Math.floor((Math.random() * tweets.length) + 1);
-      tweet = tweets[Math.floor(Math.random()*tweets.length)];
+      tweet = tweets[Math.floor(Math.random() * tweets.length)];
 
       console.log('tweet retrieved:', tweet);
       hash_tag_by_user = [];
       numHashtags = usernames.length * 5;
-      hashTagSvc.getHashTags(5, function(userHashTags) {
+      hashTagSvc.getHashTags(5, function (userHashTags) {
         console.log("retrieving hashtags");
         hash_tag_by_user = {};
 
@@ -87,7 +87,8 @@ io.on('connection', function (socket) {
           tweet: tweet,
           hashtags: hash_tag_by_user,
           judge: judge,
-          scores: scores
+          scores: scores,
+          lastRoundWinner: lastRoundWinner
         });
         // socket.in(socket.user.uuid).emit('new_msg', {msg: 'hello'});
         socket.emit('start round', {
@@ -102,8 +103,9 @@ io.on('connection', function (socket) {
 
   function startGame(socket) {
     scores = [];
+    lastRoundWinner = null;
 
-    usernames.forEach(function (username, index) {
+    usernames.forEach(function (username) {
       scores.push({username: username, score: 0});
     });
 
@@ -129,7 +131,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('new round', function (data) {
-    console.log('new round');
+    console.log('new round', data);
     startGame(socket);
   });
 
@@ -161,17 +163,18 @@ io.on('connection', function (socket) {
 
   socket.on('end round', function (data) {
     console.log('end round', data);
-    socket.broadcast.emit('send winner of round', {
-      username: data.username,
-      hashtag: data.hashtag
-    });
-    socket.emit('send winner of round', {
-      username: data.username,
-      hashtag: data.hashtag
-    });
+    // socket.broadcast.emit('send winner of round', {
+    //   username: data.username,
+    //   hashtag: data.hashtag
+    // });
+    lastRoundWinner = {username: data.username, hashtag: data.hashtag};
+    // socket.emit('send winner of round', {
+    //   username: data.username,
+    //   hashtag: data.hashtag
+    // });
     hashTags = [];
 
-    scores.forEach(function(userScore) {
+    scores.forEach(function (userScore) {
       if (userScore.username === data.username) {
         userScore.score++;
       }
@@ -199,7 +202,7 @@ io.on('connection', function (socket) {
     });
   });
 
-  socket.on('chat message sent', function(message) {
+  socket.on('chat message sent', function (message) {
     chat.push(message);
 
     socket.emit('chat update', {
@@ -211,11 +214,10 @@ io.on('connection', function (socket) {
     });
   });
 
-  socket.on('initialize chat', function() {
-
+  socket.on('initialize chat', function () {
     socket.emit('set chat state', {
       'chat' : chat
-    })
+    });
   });
 
 });
