@@ -9,6 +9,10 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');
 var config = require('./config/environment');
+var mongoose = require('mongoose');
+
+// Connect to database
+mongoose.connect(config.mongo.uri, config.mongo.options);
 
 // Populate DB with sample data
 if (config.seedDB) { require('./config/seed'); }
@@ -40,10 +44,9 @@ var scores = [];
 var chat = [];
 var lastRoundWinner = null;
 
-var TWEET_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=625026020&format=csv";
 var HASHTAG_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=0&format=csv";
 
-var tweetSvc = new TweetService(TWEET_URL);
+var tweetSvc = new TweetService();
 var hashTagSvc = new HashtagService(HASHTAG_URL);
 
 Array.prototype.remove = function () {
@@ -74,6 +77,7 @@ io.on('connection', function (socket) {
       console.log('tweet retrieved:', tweet);
       hash_tag_by_user = [];
       numHashtags = usernames.length * 5;
+
       hashTagSvc.getHashTags(5, function (userHashTags) {
         console.log("retrieving hashtags");
         hash_tag_by_user = {};
