@@ -46,30 +46,41 @@
   </md-sidenav>
 
   <ion-content>
-    <md-content ng-show="gameState.lastRoundWinner">
-     <md-card>
-       <md-card-content>
-         <h2>Winner is #{{gameState.lastRoundWinner.hashtag.content}}</h2>
-         <p>
-           Submitted by: {{gameState.lastRoundWinner.username}}
-         </p>
-       </md-card-content>
-     </md-card>
+    <md-content ng-show="gameState.lastRoundWinner"
+                ng-swipe-left="gameState.lastRoundWinner = false">
+      <md-card>
+        <md-card-content>
+          <h3>Winner is #{{gameState.lastRoundWinner.hashtag.content}}</h3>
+          <p>
+            Submitted by: {{gameState.lastRoundWinner.username}}
+          </p>
+        </md-card-content>
+      </md-card>
     </md-content>
 
     <!-- GAME PARTIAL -->
-    <md-content layout="column"
-                layout-align="center center"
-                ng-show="gameState.tweet">
+    <md-content>
+      <md-card>
+        <md-card-content layout="column"
+                  layout-align="center center"
+                  ng-show="gameState.tweet">
 
-      <!-- TWEET PARTIAL -->
-      <div class="tweet"
-         layout="column"
-         layout-align="center center">
-        <img class="tweet-img"
-             ng-src="{{gameState.tweet.image}}" />
-        <div>@{{gameState.tweet.screen_name}} <br> {{gameState.tweet.content}}</div>
-      </div>
+        <!-- TWEET PARTIAL -->
+        <md-item-content>
+          <div class="md-tile-left">
+            <img ng-src="{{gameState.tweet.image}}"
+                 class="tweet-img" />
+          </div>
+          <div class="md-tile-content">
+            <h3>@{{gameState.tweet.screen_name}}</h3>
+            <p>{{gameState.tweet.name}}</p>
+          </div>
+        </md-item-content>
+        <md-item-content>
+          <h3>{{gameState.tweet.content}}</h3>
+        </md-item-content>
+      </md-card>
+    </md-content>
 
       <!-- JUDGE PARTIAL -->
       <div ng-show="gameState.isJudge">
@@ -94,7 +105,6 @@
 
       <!-- PLAYER PARTIAL -->
       <md-list ng-show="gameState.hasntVoted && !gameState.isJudge">
-        <h3 class="voting-status-thing"><span class="hash">Re</span>Hash It:</h3>
         <md-item ng-repeat="hashtag in gameState.hashTags track by $index"
                  layout="column">
           <md-button class="md-accent"

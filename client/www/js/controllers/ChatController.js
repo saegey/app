@@ -123,7 +123,7 @@ var chat = app.controller('ChatController', function (
     $timeout(function () {
       console.log('hide last round winner');
       $scope.gameState.lastRoundWinner = false;
-    }, 8000);
+    }, 12000);
     $scope.gameState.voteEnabled = false;
     $scope.gameState.judge = data.judge;
     $scope.gameState.hasntVoted = true;
