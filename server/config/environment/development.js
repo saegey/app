@@ -13,10 +13,9 @@ module.exports = {
   // port:     process.env.OPENSHIFT_NODEJS_PORT ||
   //           process.env.PORT ||
   //           8080,
-  // mongo: {
-  //   uri: 	process.env.MONGO_URL ||
-		// 			'mongodb://localhost/fullstack-test'
-  // },
+  mongo: {
+    uri:  process.env.MONGO_URL || 'mongodb://localhost/tweet-bot-development'
+  },
 
   seedDB: true
 };

@@ -68,16 +68,16 @@
         <!-- TWEET PARTIAL -->
         <md-item-content>
           <div class="md-tile-left">
-            <img ng-src="{{gameState.tweet.image}}"
+            <img ng-src="{{gameState.tweet.user.profile_image_url}}"
                  class="tweet-img" />
           </div>
           <div class="md-tile-content">
-            <h3>@{{gameState.tweet.screen_name}}</h3>
-            <p>{{gameState.tweet.name}}</p>
+            <h3>@{{gameState.tweet.user.screen_name}}</h3>
+            <p>{{gameState.tweet.user.name}}</p>
           </div>
         </md-item-content>
         <md-item-content>
-          <h3>{{gameState.tweet.content}}</h3>
+          <h3>{{gameState.tweet.text}}</h3>
         </md-item-content>
       </md-card>
     </md-content>
