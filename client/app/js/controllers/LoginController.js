@@ -6,7 +6,7 @@ angular.module('rehash-app')
 
       $scope.user = {};
 
-      $scope.login = function() {
+      $scope.login = function () {
         var nickname = $sanitize($scope.user.nickname);
 
         if (nickname) {

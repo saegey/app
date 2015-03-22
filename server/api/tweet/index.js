@@ -9,5 +9,6 @@ var router = express.Router();
 
 router.get('/tweets', controller.tweets);
 router.get('/hashtags', controller.hashtags);
+router.get('/tweets/:id', controller.show);
 
 module.exports = router;

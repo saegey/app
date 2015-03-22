@@ -20,7 +20,8 @@ if (config.seedDB) { require('./config/seed'); }
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
+
 var sys = require('sys');
 var exec = require('child_process').exec;
 require('./config/socketio')(io);

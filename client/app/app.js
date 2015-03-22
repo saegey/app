@@ -27,7 +27,7 @@ angular.module('rehash-app',
 {
 
   $mdThemingProvider.theme('default')
-    .primaryPalette('orange')
+    .primaryPalette('blue')
     .accentPalette('teal')
     .warnPalette('red')
     .backgroundPalette('grey');
@@ -35,11 +35,11 @@ angular.module('rehash-app',
   $stateProvider
   .state('chat', {
     url: "/chat/:nickname",
-    templateUrl: "templates/chat.html"
+    templateUrl: "app/templates/chat.html"
   })
   .state('login', {
     url: "/login",
-    templateUrl: "templates/login.html"
+    templateUrl: "app/templates/login.html"
   });
 
   $urlRouterProvider.otherwise('/login');

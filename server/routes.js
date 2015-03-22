@@ -22,8 +22,8 @@ module.exports = function (app) {
 
   // All other routes should redirect to the index.html
   // @NOTE: This is breaking templates on the app side, commenting out
-  //app.route('/*')
-  //  .get(function (req, res) {
-  //    res.sendfile(app.get('appPath') + '/index.html');
-  //  });
+  app.route('/*')
+   .get(function (req, res) {
+     res.sendfile(app.get('appPath') + '/index.html');
+   });
 };

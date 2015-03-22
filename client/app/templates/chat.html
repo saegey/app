@@ -1,9 +1,9 @@
+<div ng-controller="ChatController">
 <ion-view view-title="ReHash"
-          ng-controller="ChatController as chatCtrl"
           class="light-grey">
   <ion-header-bar>
     <img class="heading_logo"
-         src="img/rehash_icon.svg" >
+         src="assets/images/rehash_icon.svg" >
     <span class="user-score">
       <span class="hash">{{gameState.score}}</span>
     </span>
@@ -12,7 +12,7 @@
                  class="chat-button">
         <span>Chat</span>
         <div class="chat-button-indicator"
-                 ng-show="$root.unreadChats > 0">{{$root.unreadChats}}</div>
+             ng-show="$root.unreadChats > 0">{{$root.unreadChats}}</div>
       </md-button>
     </div>
   </ion-header-bar>
@@ -114,3 +114,4 @@
     </div>
     </ion-content>
  </ion-view>
+ </div>
