@@ -2,16 +2,16 @@
 
 angular.module('rehash-app')
   .controller('ChatController',
-    function (
-      $scope,
-      $stateParams,
-      socket,
-      $mdSidenav,
-      $mdToast,
-      $timeout,
-      chatService,
-      $rootScope
-    ) {
+  function (
+    $scope,
+    $stateParams,
+    socket,
+    $mdSidenav,
+    $mdToast,
+    $timeout,
+    chatService,
+    $rootScope
+  ) {
 
     $scope.gameState = {
       'hasntVoted'  : true,
@@ -113,7 +113,7 @@ angular.module('rehash-app')
       $timeout(function () {
         console.log('hide last round winner');
         $scope.gameState.lastRoundWinner = false;
-      }, 8000);
+      }, 12000);
       $scope.gameState.voteEnabled = false;
       $scope.gameState.judge = data.judge;
       $scope.gameState.hasntVoted = true;
@@ -149,4 +149,3 @@ angular.module('rehash-app')
       socket.emit('end round', hashtag);
     };
   });
-

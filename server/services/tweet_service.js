@@ -1,13 +1,11 @@
-var GoogleSheetService = require('../services/google_sheet_service');
+var Tweet = require('../api/tweet/tweet.model');
 
-function TweetService(url) {
-  this.url = url;
-  this.sheetService = new GoogleSheetService(url);
-}
+function TweetService() {}
 
 TweetService.prototype.getRandomTweet = function (next) {
-  this.sheetService.getData(function (result) {
-    return next(result);
+  Tweet.find(function (err, tweets) {
+    if (err) { console.log("error:", err); }
+    return next(tweets);
   });
 }
 

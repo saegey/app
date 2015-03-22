@@ -14,7 +14,7 @@ module.exports = function (app) {
 
   // app.use('/auth', require('./auth'));
 
-  app.use('/api', require('./api/tweets'));
+  app.use('/api', require('./api/tweet'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|www|assets)/*')
