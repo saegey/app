@@ -1,9 +1,6 @@
-// Ionic Socket IO app
+'use strict';
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-var app=angular.module('rehash-app',
+angular.module('rehash-app',
   [ 'ionic',
     'ngSanitize',
     'btford.socket-io',
@@ -17,6 +14,7 @@ var app=angular.module('rehash-app',
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+    // @TODO: This is throwing an error on devices
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
@@ -44,6 +42,5 @@ var app=angular.module('rehash-app',
     templateUrl: "templates/login.html"
   });
 
-  // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 });
