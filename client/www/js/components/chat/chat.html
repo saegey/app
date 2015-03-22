@@ -1,0 +1,28 @@
+<md-sidenav class="md-sidenav-right md-whiteframe-z2 chat-sidenav"
+            md-component-id="right">
+  <md-toolbar class="md-theme-light chat-toolbar">
+    <div class="chat-button-container">
+      <md-button ng-click="toggleChat()">Close</md-button>
+    </div>
+  </md-toolbar>
+  <md-content class="md-padding chat-container">
+    <md-list scroll-glue class="chat-history">
+      <md-item ng-repeat="message in chat track by $index">
+        <md-item-content ng-class="{'chat-msg-system' : message.isSystem}">
+          <span class="chat-msg-name">{{message.user}}:</span>
+          <span class="chat-msg-msg">{{message.message}}</span>
+        </md-item-content>
+      </md-item>
+    </md-list>
+    <form name="chatRoom"
+          class="chat-form">
+      <div class="chat-input-wrapper">
+        <input class="chat-input"
+               ng-model="chatText"
+               type="text"
+               autocomplete="off"/>
+        <md-button ng-click="sendChatMessage(chatText)" type="submit">Send</md-button>
+      </div>
+    </form>
+  </md-content>
+</md-sidenav>

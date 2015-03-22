@@ -1,7 +1,10 @@
-app.factory('socket', function(socketFactory) {
+'use strict';
+
+angular.module('rehash-app').factory('socket',
+  function(socketFactory) {
 
   var myIoSocket = io.connect('http://localhost:5000');
-  mySocket = socketFactory({
+  var mySocket = socketFactory({
     ioSocket: myIoSocket
   });
 

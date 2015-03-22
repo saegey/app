@@ -6,19 +6,18 @@
       <img class="login-logo" src="../img/rehash_icon.png" alt=""/>
 
       <form name="nameForm"
-            novalidate
-            ng-submit="submitName()">
+            novalidate>
 
         <md-input-container flex>
           <label>Name</label>
           <input id="first_name"
                  type="text"
                  placeholder="Name"
-                 ng-model="logcntrl.nickname">
+                 ng-model="user.nickname">
         </md-input-container>
 
         <div layout="column">
-          <md-button ng-click="logcntrl.join()"
+          <md-button ng-click="login()"
                      class="md-raised md-accent"
                      type="submit">Play</md-button>
         </div>

@@ -12,38 +12,12 @@
                  class="chat-button">
         <span>Chat</span>
         <div class="chat-button-indicator"
-                 ng-show="gameState.unreadChats > 0">{{gameState.unreadChats}}</div>
+                 ng-show="$root.unreadChats > 0">{{$root.unreadChats}}</div>
       </md-button>
     </div>
   </ion-header-bar>
 
-  <md-sidenav class="md-sidenav-right md-whiteframe-z2 chat-sidenav"
-              md-component-id="right">
-    <md-toolbar class="md-theme-light chat-toolbar">
-      <div class="chat-button-container">
-        <md-button ng-click="toggleChat()">Close</md-button>
-      </div>
-    </md-toolbar>
-    <md-content class="md-padding chat-container">
-      <md-list scroll-glue class="chat-history">
-        <md-item ng-repeat="message in gameState.chat track by $index">
-          <md-item-content>
-            {{message.user}} : {{message.message}}
-          </md-item-content>
-        </md-item>
-      </md-list>
-      <form name="chatRoom"
-            class="chat-form">
-        <div class="chat-input-wrapper">
-          <input class="chat-input"
-                 ng-model="chatText"
-                 type="text"
-                 autocomplete="off"/>
-          <md-button ng-click="sendChat(chatText)" type="submit">Send</md-button>
-        </div>
-      </form>
-    </md-content>
-  </md-sidenav>
+  <chat></chat>
 
   <ion-content>
     <md-content ng-show="gameState.lastRoundWinner"

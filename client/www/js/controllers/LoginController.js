@@ -1,14 +1,17 @@
-app.controller('LoginController', function ($state,$sanitize) {
-  var self=this;
+'use strict';
 
-  self.join=function()
-  {
-    //sanitize the nickname
-    var nickname=$sanitize(self.nickname);
-    
-    if(nickname) {
-      $state.username = nickname;
-      $state.go('chat',{nickname:nickname});
-    }
-  };
-});
+angular.module('rehash-app')
+  .controller('LoginController',
+    function ($scope, $state, $sanitize) {
+
+      $scope.user = {};
+
+      $scope.login = function() {
+        var nickname = $sanitize($scope.user.nickname);
+
+        if (nickname) {
+          $state.username = nickname;
+          $state.go('chat', {nickname : nickname});
+        }
+      };
+    });

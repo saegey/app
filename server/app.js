@@ -147,6 +147,7 @@ io.on('connection', function (socket) {
     numUsers++;
 
     socket.emit('login', {
+      username: username,
       numUsers: numUsers,
       users: usernames
     });

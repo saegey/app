@@ -132,3 +132,19 @@
   flex: 1 0 auto;
   height: 47px;
 }
+
+.chat-msg-system {
+  color: gray;
+  font-size: 80%;
+}
+
+.chat-msg-system .chat-msg-name {
+  display: none;
+}
+
+.chat-msg-name {
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+
