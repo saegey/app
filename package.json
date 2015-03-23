@@ -78,6 +78,7 @@
     "main-bower-files": "^2.6.2",
     "shelljs": "^0.3.0",
     "time-grunt": "^1.1.0",
-    "wiredep": "^2.2.2"
+    "wiredep": "^2.2.2",
+    "yeoman-generator": "^0.18.10"
   }
 }

@@ -1,2 +1,0 @@
-web: nodemon server/app.js
-gulp: gulp watch
