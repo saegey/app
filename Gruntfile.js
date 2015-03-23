@@ -312,13 +312,13 @@ module.exports = function (grunt) {
         // This should be the name of your apps angular module
         module: 'rehash-app',
         htmlmin: {
-          collapseBooleanAttributes: true,
-          collapseWhitespace: true,
-          removeAttributeQuotes: true,
-          removeEmptyAttributes: true,
-          removeRedundantAttributes: true,
-          removeScriptTypeAttributes: true,
-          removeStyleLinkTypeAttributes: true
+          collapseBooleanAttributes: false,
+          collapseWhitespace: false,
+          removeAttributeQuotes: false,
+          removeEmptyAttributes: false,
+          removeRedundantAttributes: false,
+          removeScriptTypeAttributes: false,
+          removeStyleLinkTypeAttributes: false
         },
         usemin: 'app/app.js'
       },
@@ -652,7 +652,7 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    // 'cdnify',
+    'cdnify',
     'cssmin',
     'uglify',
     'rev',
