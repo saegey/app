@@ -1,117 +1,62 @@
+<ion-header-bar class="bar-calm">
+  <h1 class="title">#ReHash</h1>
+  <div class="buttons">
+    <button class="button icon ion-star">Chat</button>
+  </div>
+</ion-header-bar>
 <div ng-controller="ChatController">
-<ion-view view-title="ReHash"
-          class="light-grey">
-  <ion-header-bar>
-    <img class="heading_logo"
-         src="assets/images/rehash_icon.svg" >
-    <span class="user-score">
-      <span class="hash">{{gameState.score}}</span>
-    </span>
-    <div class="chat-button-container">
-      <md-button ng-click="toggleChat()"
-                 class="chat-button">
-        <span>Chat</span>
-        <div class="chat-button-indicator"
-             ng-show="$root.unreadChats > 0">{{$root.unreadChats}}</div>
-      </md-button>
-    </div>
-  </ion-header-bar>
-
-  <chat></chat>
-
   <ion-content>
-    <md-content ng-show="gameState.lastRoundWinner"
-                ng-swipe-left="gameState.lastRoundWinner = false">
-      <md-card>
-        <md-card-content>
-          <h3>Winner is #{{gameState.lastRoundWinner.hashtag.content}}</h3>
-          <p>
-            Submitted by: {{gameState.lastRoundWinner.username}}
-          </p>
-        </md-card-content>
-      </md-card>
-    </md-content>
+    <div ng-show="!gameState.gameStarted">
+      <ul class="list" ng-show="!gameState.gameStarted">
+        <li ng-repeat="user in gameState.users track by $index"
+            class="item">
+          <h3 class="user">{{user}}</h3>
+        </li>
+      </ul>
+    </div>
 
     <!-- GAME PARTIAL -->
-    <md-content>
-      <md-card>
-        <md-card-content layout="column"
-                  layout-align="center center"
-                  ng-show="gameState.tweet">
-
-        <!-- TWEET PARTIAL -->
-        <md-item-content>
-          <div class="md-tile-left">
-            <img ng-src="{{gameState.tweet.user.profile_image_url}}"
-                 class="tweet-img" />
-          </div>
-          <div class="md-tile-content">
-            <h3>@{{gameState.tweet.user.screen_name}}</h3>
-            <p>{{gameState.tweet.user.name}}</p>
-          </div>
-        </md-item-content>
-        <md-item-content>
-          <h3>{{gameState.tweet.text}}</h3>
-        </md-item-content>
-      </md-card>
-    </md-content>
-
-      <!-- JUDGE PARTIAL -->
-      <div ng-show="gameState.isJudge">
-        <h3 class="voting-status-thing"
-            ng-show="!gameState.voteEnabled">Judge: Waiting for Votes</h3>
-
-        <div ng-show="gameState.voteEnabled">
-          <h3 class="voting-status-thing">You Are Judging:</h3>
-          <md-list>
-            <md-item ng-repeat="hashtag in gameState.hashTags track by $index"
-                     layout="column">
-              <md-button class="md-accent"
-                         data="{{gameState.hashtag}}"
-                         ng-click="gameState.voteForHashtag(hashtag)">
-                <h3 class="hashtag"><span class="hash">#</span>{{hashtag.hashtag.content}}</h3>
-              </md-button>
-            </md-item>
-          </md-list>
-        </div>
+    <div class="card" ng-show="gameState.gameStarted">
+      <div class="item item-avatar">
+        <img ng-src="{{gameState.tweet.user.profile_image_url}}"
+             class="tweet-img" />
+        <h2>{{gameState.tweet.user.name}}</h2>
+        <p>{{gameState.tweet.user.name}}</p>
       </div>
-
-
-      <!-- PLAYER PARTIAL -->
-      <md-list ng-show="gameState.hasntVoted && !gameState.isJudge">
-        <md-item ng-repeat="hashtag in gameState.hashTags track by $index"
-                 layout="column">
-          <md-button class="md-accent"
-                     data="{{gameState.hashtag}}"
-                     ng-click="gameState.submitHashtag(hashtag)">
-            <h3 class="hashtag"><span class="hash">#</span>{{hashtag.content}}</h3>
-          </md-button>
-        </md-item>
-      </md-list>
-    </md-content>
-
-    <!-- LOBBY PARTIAL -->
-    <div class="list light-grey bottommsg" ng-show="!gameState.gameStarted">
-      <md-list ng-show="!gameState.gameStarted">
-        <h3 class="voting-status-thing">Users in Lobby</h3>
-        <md-item ng-repeat="user in gameState.users track by $index"
-                 layout="column">
-            <md-item-content>
-              <div class="md-tile-content user-list-name">
-                <h3 class="user">{{user}}</h3>
-              </div>
-            </md-item-content>
-        </md-item>
-      </md-list>
-
-      <div layout="column"
-           layout-align="center center"
-           class="item item-input-inset light-grey start-game-thingy">
-        <md-button ng-click="gameState.startGame()"
-                   class="md-raised md-accent"
-                   type="submit">Start Game</md-button>
+      <div class="item item-body">
+        <h2>{{gameState.tweet.text}}</h2>
+        <p>
+          <a href="#" class="subdued">{{gameState.tweet.retweet_count}} retweets</a>
+          <a href="#" class="subdued">{{gameState.tweet.user.followers_count}} followers</a>
+        </p>
       </div>
     </div>
-    </ion-content>
- </ion-view>
- </div>
+
+    <div class="list card" ng-show="gameState.gameStarted && gameState.hasntVoted && !gameState.isJudge">
+        <a href="#" class="item"
+                    ng-click="gameState.submitHashtag(hashtag)"
+                    ng-repeat="hashtag in gameState.hashTags track by $index">
+          #{{hashtag.content}}
+        </a>
+    </div>
+
+    <div ng-show="gameState.gameStarted && gameState.isJudge">
+      <div class="list card">
+          <div class="item item-divider">
+    Waiting for Votes
+  </div>
+                   <a href="#" class="item"
+                      ng-click="gameState.voteForHashtag(hashtag)"
+                      ng-repeat="hashtag in gameState.hashTags track by $index">
+              #{{hashtag.hashtag.content}}
+              </a>
+      </div>
+    </div>
+
+    <button class="button button-stable button-full"
+            ng-click="gameState.startGame()"
+            ng-show="!gameState.gameStarted">
+      Start Game
+    </button>
+  </ion-content>
+</div>
