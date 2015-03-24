@@ -109,6 +109,60 @@ Tweet.find({}).remove(function() {
       "name" : "Nicole Polizzi",
       "id" : 28638191
     },
+  },
+  {
+    "created_at" : "2015-03-17T14:22:31Z",
+    "id" : 577837419220729900,
+    "text" : "“I Seek Immortal Glory” @MikeTyson \nhttp://t.co/SpI7Ek2ucs http://t.co/4xJ4q2sIKY",
+    "truncated" : false,
+    "retweet_count" : 107,
+    "favorite_count" : 272,
+    "favorited" : true,
+    "retweeted" : false,
+    "lang" : "en",
+    "entities" : {
+      "urls" : [
+        {
+          "expanded_url" : "http://miketysonlive.com/?p=5865",
+          "url" : "http://t.co/SpI7Ek2ucs",
+          "indices" : [
+            36,
+            58
+          ]
+        }
+      ],
+      "user_mentions" : [
+        {
+          "id" : 156132825,
+          "name" : "Mike Tyson",
+          "screen_name" : "MikeTyson",
+          "indices" : [
+            24,
+            34
+          ]
+        }
+      ],
+      "hashtags" : [ ]
+    },
+    "user" : {
+      "following" : false,
+      "profile_image_url" : "http://pbs.twimg.com/profile_images/483336566484393984/dBPrk9ZX_normal.jpeg",
+      "verified" : true,
+      "favourites_count" : 265,
+      "friends_count" : 392,
+      "followers_count" : 4632770,
+      "entities" : {
+        "description" : {},
+        "url" : {}
+      },
+      "url" : "http://t.co/ozB5PJD1ii",
+      "description" : "",
+      "location" : "Las Vegas, NV",
+      "screen_name" : "MikeTyson",
+      "name" : "Mike Tyson",
+      "id" : 156132825
+    },
+    "extended_entities" : {}
   });
 });
 

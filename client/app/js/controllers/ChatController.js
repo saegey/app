@@ -6,10 +6,8 @@ angular.module('rehash-app')
     $scope,
     $stateParams,
     socket,
-    $mdSidenav,
-    $mdToast,
     $timeout,
-    chatService,
+    // chatService,
     $rootScope
   ) {
 
@@ -27,12 +25,12 @@ angular.module('rehash-app')
 
     $rootScope.nickname = $stateParams.nickname;
 
-    $scope.toggleChat = function () {
-      $mdSidenav('right').toggle()
-        .then(function() {
-          $rootScope.unreadChats = 0;
-        });
-    };
+    // $scope.toggleChat = function () {
+    //   $mdSidenav('right').toggle()
+    //     .then(function() {
+    //       $rootScope.unreadChats = 0;
+    //     });
+    // };
 
     socket.on('connect', function () {
       //Add user
@@ -40,11 +38,11 @@ angular.module('rehash-app')
       $scope.nickname = $stateParams.nickname;
       // On login display welcome message
       socket.on('login', function (data) {
-        chatService.sendMessage({
-          'body'     : data.username + ' joined the game :)',
-          'isSystem' : true,
-          'popToast' : true
-        });
+        // chatService.sendMessage({
+        //   'body'     : data.username + ' joined the game :)',
+        //   'isSystem' : true,
+        //   'popToast' : true
+        // });
 
         $scope.gameState.users = data.users;
         console.log('login:users-online: ', data.users);
@@ -59,11 +57,11 @@ angular.module('rehash-app')
     socket.on('user left', function (data) {
       console.log('user left', data);
 
-      chatService.sendMessage({
-        'body'     : data.username + ' left the game :(',
-        'isSystem' : true,
-        'popToast' : true
-      });
+      // chatService.sendMessage({
+      //   'body'     : data.username + ' left the game :(',
+      //   'isSystem' : true,
+      //   'popToast' : true
+      // });
     });
 
     socket.on('send hashtag to judge', function (data) {
@@ -104,10 +102,10 @@ angular.module('rehash-app')
       if ($scope.gameState.lastRoundWinner) {
         var winner = $scope.gameState.lastRoundWinner;
 
-        chatService.sendMessage({
-          'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.hashtag.content,
-          'isSystem' : true
-        });
+        // chatService.sendMessage({
+        //   'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.hashtag.content,
+        //   'isSystem' : true
+        // });
       }
 
       $timeout(function () {

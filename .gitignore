@@ -2,7 +2,6 @@ node_modules
 public
 .tmp
 .sass-cache
-client/lib
 dist
 /server/config/local.env.js
 plugins
@@ -11,5 +10,6 @@ npm-debug.log
 /.idea
 client/.idea
 client/platforms
-client/www/lib
+client/lib/*
 client/www/css
+client/bower_components

@@ -4,7 +4,6 @@ angular.module('rehash-app',
   [ 'ionic',
     'ngSanitize',
     'btford.socket-io',
-    'ngMaterial',
     'ngTouch',
     'luegg.directives'
   ])
@@ -23,23 +22,17 @@ angular.module('rehash-app',
     }
   });
 })
-.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider)
+.config(function($stateProvider, $urlRouterProvider)
 {
-
-  $mdThemingProvider.theme('default')
-    .primaryPalette('orange')
-    .accentPalette('teal')
-    .warnPalette('red')
-    .backgroundPalette('grey');
 
   $stateProvider
   .state('chat', {
     url: "/chat/:nickname",
-    templateUrl: "templates/chat.html"
+    templateUrl: "app/templates/chat.html"
   })
   .state('login', {
     url: "/login",
-    templateUrl: "templates/login.html"
+    templateUrl: "app/templates/login.html"
   });
 
   $urlRouterProvider.otherwise('/login');
