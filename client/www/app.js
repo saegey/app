@@ -28,11 +28,11 @@ angular.module('rehash-app',
   $stateProvider
   .state('chat', {
     url: "/chat/:nickname",
-    templateUrl: "app/templates/chat.html"
+    templateUrl: "www/templates/chat.html"
   })
   .state('login', {
     url: "/login",
-    templateUrl: "app/templates/login.html"
+    templateUrl: "www/templates/login.html"
   });
 
   $urlRouterProvider.otherwise('/login');
