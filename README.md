@@ -3,10 +3,19 @@
 
 ## How to use
 
+Requires mongodb: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/
+
 ```
-$ ./develop.sh
+npm install -g grunt-cli bower
+gem install sass
 ```
 
-And point your browser to `http://localhost:5000`. Optionally, specify
-a port by supplying the `PORT` env variable.
+```
+npm install
+bower install
+```
 
+```
+mongod
+grunt serve
+```
