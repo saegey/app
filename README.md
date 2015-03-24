@@ -3,10 +3,12 @@
 
 ## How to use
 
-```
-$ ./develop.sh
-```
+Requires mongodb: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/
 
-And point your browser to `http://localhost:5000`. Optionally, specify
-a port by supplying the `PORT` env variable.
-
+```
+npm install -g grunt-cli
+npm install bower install
+gem install sass
+mongod
+grunt serve
+```
