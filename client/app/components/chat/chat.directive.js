@@ -4,24 +4,27 @@ angular.module('rehash-app')
   .directive('chat', function($rootScope, chatService, $sanitize) {
     return {
       'restrict'    : 'E',
-      'templateUrl' : 'js/components/chat/chat.html',
+      'templateUrl' : 'app/components/chat/chat.html',
       'replace'     : true,
       'link'        : function(scope, elem, attrs) {
 
-        scope.chat = [];
+
+        scope.chat = {};
+        scope.chat.log = [];
+        scope.chat.input = '';
 
         scope.$watch(function() { return chatService.chat; },
           function (newChat) {
-            scope.chat = newChat;
+            scope.chat.log = newChat;
           }
         );
 
         scope.sendChatMessage = function (text) {
-          scope.chatText = '';
+          scope.chat.input = '';
 
           var messageData = {
             'body'      : $sanitize(text),
-            'name'      : $rootScope.nickname,
+            'name'      : $rootScope.username,
             'popToast'  : true,
             'showCount' : true
           }

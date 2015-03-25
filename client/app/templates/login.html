@@ -7,22 +7,23 @@
     <button class="button icon ion-star">Chat</button>
   </div>
 </ion-header-bar>
+
 <div ng-controller="LoginController">
-<ion-content>
-  <form>
-    <div class="list">
-      <div class="form-group">
-        <label class="item item-input">
-          <span class="input-label">Username</span>
-          <input type="text" ng-model="user.username">
+  <ion-content>
+    <form>
+      <div class="list">
+        <div class="form-group">
+          <label class="item item-input">
+            <span class="input-label">Username</span>
+            <input type="text" ng-model="user.username">
+          </label>
+        </div>
+        <label class="item">
+          <button class="button button-block button-positive"
+                  type="submit"
+                  ng-click="login()">Log in</button>
         </label>
       </div>
-      <label class="item">
-        <button class="button button-block button-positive"
-                type="submit"
-                ng-click="login()">Log in</button>
-      </label>
-    </div>
-  </form>
-</ion-content>
+    </form>
+  </ion-content>
 </div>

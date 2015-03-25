@@ -1,15 +1,16 @@
 'use strict';
 
 angular.module('rehash-app')
-  .controller('ChatController',
-  function (
+  .controller('GameCtrl', function (
     $scope,
     $stateParams,
     socket,
     $timeout,
-    // chatService,
-    $rootScope
-  ) {
+    chatService,
+    $state,
+    $rootScope) {
+
+    console.log('GameCtrl init');
 
     $scope.gameState = {
       'hasntVoted'  : true,
@@ -23,7 +24,11 @@ angular.module('rehash-app')
       'tweet'       : null
     };
 
-    $rootScope.nickname = $stateParams.nickname;
+    $rootScope.username = $stateParams.username;
+
+    console.log('stateparms', $stateParams);
+
+    console.log('$rootScope.username', $rootScope.username);
 
     // $scope.toggleChat = function () {
     //   $mdSidenav('right').toggle()
@@ -34,15 +39,15 @@ angular.module('rehash-app')
 
     socket.on('connect', function () {
       //Add user
-      socket.emit('join lobby', $stateParams.nickname);
-      $scope.nickname = $stateParams.nickname;
+      socket.emit('join lobby', $rootScope.username);
+      $scope.nickname = $rootScope.username;
       // On login display welcome message
       socket.on('login', function (data) {
-        // chatService.sendMessage({
-        //   'body'     : data.username + ' joined the game :)',
-        //   'isSystem' : true,
-        //   'popToast' : true
-        // });
+        chatService.sendMessage({
+           'body'     : data.username + ' joined the game :)',
+           'isSystem' : true,
+           'popToast' : true
+        });
 
         $scope.gameState.users = data.users;
         console.log('login:users-online: ', data.users);
@@ -57,15 +62,15 @@ angular.module('rehash-app')
     socket.on('user left', function (data) {
       console.log('user left', data);
 
-      // chatService.sendMessage({
-      //   'body'     : data.username + ' left the game :(',
-      //   'isSystem' : true,
-      //   'popToast' : true
-      // });
+      chatService.sendMessage({
+         'body'     : data.username + ' left the game :(',
+         'isSystem' : true,
+         'popToast' : true
+      });
     });
 
     socket.on('send hashtag to judge', function (data) {
-      if ($stateParams.nickname === $scope.gameState.judge) {
+      if ($rootScope.username === $scope.gameState.judge) {
         console.log('judge received hashtag', data);
         $scope.gameState.hashTags.push(data);
       }
@@ -102,10 +107,10 @@ angular.module('rehash-app')
       if ($scope.gameState.lastRoundWinner) {
         var winner = $scope.gameState.lastRoundWinner;
 
-        // chatService.sendMessage({
-        //   'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.hashtag.content,
-        //   'isSystem' : true
-        // });
+        chatService.sendMessage({
+           'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.hashtag.content,
+           'isSystem' : true
+        });
       }
 
       $timeout(function () {
@@ -117,12 +122,12 @@ angular.module('rehash-app')
       $scope.gameState.hasntVoted = true;
       $scope.gameState.gameStarted = true;
 
-      if ($stateParams.nickname === $scope.gameState.judge) {
+      if ($rootScope.username === $scope.gameState.judge) {
         $scope.gameState.hashTags = [];
         $scope.gameState.isJudge = true;
         console.log('your are the judge');
       } else {
-        $scope.gameState.hashTags = data.hashtags[$stateParams.nickname];
+        $scope.gameState.hashTags = data.hashtags[$rootScope.username];
         $scope.gameState.isJudge = false;
         console.log('judge is ' + $scope.gameState.judge);
       }
@@ -133,11 +138,11 @@ angular.module('rehash-app')
     $scope.gameState.submitHashtag = function (hashtag) {
       // Makes judge not able to vote yet
       $scope.gameState.voteEnabled = false;
-      hashtag.username = $stateParams.nickname;
+      hashtag.username = $rootScope.username;
       $scope.gameState.hasntVoted = false;
       socket.emit('submit hashtag', {
         hashtag: hashtag,
-        username: $stateParams.nickname
+        username: $rootScope.username
       });
       console.log('data sent "submit hashtag"', hashtag);
     };
