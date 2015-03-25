@@ -1,0 +1,28 @@
+<ion-side-menu side="right"
+               width="350">
+  <header class="bar bar-header bar-stable">
+    <h1 class="title">Chat</h1>
+  </header>
+  <ion-content class="has-header chat-container">
+    <ul scroll-glue class="chat-history">
+      <li ng-repeat="message in chat.log track by $index">
+        <div ng-class="{'chat-msg-system' : message.isSystem}">
+          <span class="chat-msg-name">{{message.user}}:</span>
+          <span class="chat-msg-msg">{{message.message}}</span>
+        </div>
+      </li>
+    </ul>
+    <form name="chatRoom"
+          class="chat-form">
+      <div class="chat-input-wrapper">
+        <input class="chat-input"
+               ng-model="chat.input"
+               type="text"
+               autocomplete="off"/>
+        <button class="chat-input-button"
+                ng-click="sendChatMessage(chat.input)"
+                type="submit">Send</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-side-menu>

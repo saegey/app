@@ -3,9 +3,7 @@
 angular.module('rehash-app').factory('chatService',
   function (
     socket,
-    $rootScope,
-    $mdSidenav,
-    $mdToast
+    $rootScope
   ) {
 
     var chatService = {};
@@ -21,9 +19,9 @@ angular.module('rehash-app').factory('chatService',
     socket.on('chat update', function (data) {
       chatService.chat = data.chat;
 
-      if ($mdSidenav('right').isOpen()) {
-        $rootScope.unreadChats = 0;
-      } else {
+      //if ($mdSidenav('right').isOpen()) {
+        //$rootScope.unreadChats = 0;
+      //} else {
         var msg = data.chat[data.chat.length - 1];
 
         if (msg.showCount) {
@@ -36,12 +34,12 @@ angular.module('rehash-app').factory('chatService',
           var userContent = msg.user + ': ' + msg.message;
           var msgContent = msg.isSystem ? systemContent : userContent;
 
-          $mdToast.show(
-            $mdToast.simple()
-              .content(msgContent)
-          );
+          //$mdToast.show(
+          //  $mdToast.simple()
+          //    .content(msgContent)
+          //);
         }
-      }
+      //}
     });
 
     chatService.sendMessage = function(messageData) {
