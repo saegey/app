@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var TweetService = require("../../services/tweet_service");
 var HashtagService = require("../../services/hashtag_service");
 var HASHTAG_URL = "https://docs.google.com/spreadsheets/d/1azduyest2um3zrUJFvS5upGa2LO7cReg0hob6VtGCas/export?gid=0&format=csv";
@@ -13,17 +14,6 @@ var hash_tag_by_user = null;
 var numHashtags = null;
 var scores = [];
 var lastRoundWinner = null;
-
-Array.prototype.remove = function () {
-  var what, a = arguments, L = a.length, ax;
-  while (L && this.length) {
-    what = a[--L];
-    while ((ax = this.indexOf(what)) !== -1) {
-      this.splice(ax, 1);
-    }
-  }
-  return this;
-};
 
  exports.register = function(socket) {
     function getNewJudge() {
@@ -147,7 +137,7 @@ Array.prototype.remove = function () {
     // when the user disconnects.. perform this
     socket.on('disconnect', function () {
       // remove the username from global usernames list
-      usernames.remove(socket.username);
+      _.pull(usernames, socket.username);
       numUsers--;
 
       if (numUsers === 1) {

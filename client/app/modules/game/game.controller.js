@@ -55,12 +55,15 @@ angular.module('rehash-app')
     });
 
     socket.on('user list', function (data) {
-      console.log("users online:", data);
+      console.log('users online:', data);
       $scope.gameState.users = data.users;
     });
 
     socket.on('user left', function (data) {
       console.log('user left', data);
+      $scope.gameState.users = $scope.gameState.users.filter(function(user) {
+        return user !== data.username;
+      });
 
       chatService.sendMessage({
          'body'     : data.username + ' left the game :(',
