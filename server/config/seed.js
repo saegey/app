@@ -6,6 +6,7 @@
 'use strict';
 
 var Tweet = require('../api/tweet/tweet.model');
+var Hashtag = require('../api/hashtag/hashtag.model');
 
 Tweet.find({}).remove(function() {
   Tweet.create({
@@ -165,6 +166,28 @@ Tweet.find({}).remove(function() {
     "extended_entities" : {}
   });
 });
+
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for( var i=0; i < 5; i++ )
+    text += possible.charAt(
+      Math.floor(
+        Math.random() * possible.length
+      )
+    );
+
+  return text;
+}
+
+
+Hashtag.find({}).remove(function() {
+  for( var i=0; i < 500; i++ ) {
+    Hashtag.create({hashtag: makeid()});
+  }
+});
+
 
 // User.find({}).remove(function() {
 //   User.create({

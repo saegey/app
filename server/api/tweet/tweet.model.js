@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    random = require('mongoose-random');
 
 var TweetSchema = new Schema({
   created_at: Date,
@@ -44,4 +45,5 @@ var TweetSchema = new Schema({
   lang: String
 });
 
+TweetSchema.plugin(random, { path: 'r' });
 module.exports = mongoose.model('Tweet', TweetSchema);
