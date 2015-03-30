@@ -39,19 +39,20 @@ angular.module('rehash-app')
 
     socket.on('connect', function () {
       //Add user
-      socket.emit('join lobby', $rootScope.username);
+      socket.emit('join lobby', { username: $rootScope.username });
       $scope.nickname = $rootScope.username;
       // On login display welcome message
-      socket.on('login', function (data) {
-        chatService.sendMessage({
-           'body'     : data.username + ' joined the game :)',
-           'isSystem' : true,
-           'popToast' : true
-        });
+    });
 
-        $scope.gameState.users = data.users;
-        console.log('login:users-online: ', data.users);
+    socket.on('user joined', function (data) {
+      chatService.sendMessage({
+         'body'     : data.user.username + ' joined the game :)',
+         'isSystem' : true,
+         'popToast' : true
       });
+
+      $scope.gameState.users = data.users;
+      console.log('login:users-online: ', data.users);
     });
 
     socket.on('user list', function (data) {
@@ -73,7 +74,7 @@ angular.module('rehash-app')
     });
 
     socket.on('send hashtag to judge', function (data) {
-      if ($rootScope.username === $scope.gameState.judge) {
+      if ($rootScope.username === $scope.gameState.judge.username.username) {
         console.log('judge received hashtag', data);
         $scope.gameState.hashTags.push(data);
       }
@@ -95,8 +96,7 @@ angular.module('rehash-app')
 
     $scope.gameState.startGame = function () {
       // Start Game
-      console.log('start game');
-      socket.emit('new round', function () {
+      socket.emit('start game', function () {
         $scope.gameState.gameStarted = true;
         $scope.gameState.voteEnabled = false;
       });
@@ -125,12 +125,13 @@ angular.module('rehash-app')
       $scope.gameState.hasntVoted = true;
       $scope.gameState.gameStarted = true;
 
-      if ($rootScope.username === $scope.gameState.judge) {
+      if ($rootScope.username === $scope.gameState.judge.username.username) {
         $scope.gameState.hashTags = [];
         $scope.gameState.isJudge = true;
         console.log('your are the judge');
       } else {
-        $scope.gameState.hashTags = data.hashtags[$rootScope.username];
+        console.log('user tags:', data.users[0].hashtags);
+        $scope.gameState.hashTags = data.users[0].hashtags;
         $scope.gameState.isJudge = false;
         console.log('judge is ' + $scope.gameState.judge);
       }
@@ -143,10 +144,8 @@ angular.module('rehash-app')
       $scope.gameState.voteEnabled = false;
       hashtag.username = $rootScope.username;
       $scope.gameState.hasntVoted = false;
-      socket.emit('submit hashtag', {
-        hashtag: hashtag,
-        username: $rootScope.username
-      });
+
+      socket.emit('submit hashtag', hashtag);
       console.log('data sent "submit hashtag"', hashtag);
     };
 

@@ -1,7 +1,8 @@
 var _ = require('lodash');
 var when = require('when');
 var Tweet = require('../tweet/tweet.model');
-var Hashtag = require('../hashtag/hashtag.model')
+var Hashtag = require('../hashtag/hashtag.model'),
+    Game = require('./game');
 
 var usernames = [];
 var numUsers = 0;
@@ -13,11 +14,14 @@ var hash_tag_by_user = null;
 var numHashtags = null;
 var scores = [];
 var lastRoundWinner = null;
+var currentGame = null;
 
 exports.register = function(socket) {
   function getNewJudge() {
     return usernames[~~(Math.random() * usernames.length)];
   }
+
+
 
   function startRound(socket) {
     judge = getNewJudge();
@@ -74,19 +78,23 @@ exports.register = function(socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('submit hashtag', function (data) {
+    console.log(data);
     // we tell the client to execute 'new message'
-    data.judge = judge;
-    socket.broadcast.emit('send hashtag to judge', data);
+    currentGame.currentRound().userSubmitHashtag(data);
+    socket.broadcast.emit('send hashtag to judge', currentGame.currentRound());
 
-    hashTags.push(data);
-    console.log("hashtags " + hashTags.length);
-    console.log("num users " + numUsers);
+    socket.broadcast.emit(
+      'judge is now voting',
+      currentGame.currentRound()
+    );
 
-    if (hashTags.length >= numUsers - 1) {
-      socket.broadcast.emit('judge is now voting', {
-        username: judge,
-        hashTags: hashTags
-      });
+    if (currentGame.currentRound().checkIfAllTagsSubmitted()) {
+      socket.broadcast.emit(
+        'judge is now voting',
+        currentGame.currentRound()
+      );
+    } else {
+      console.log('not all votes in');
     }
   });
 
@@ -95,31 +103,30 @@ exports.register = function(socket) {
     startGame(socket);
   });
 
-  socket.on('join lobby', function (username) {
-    socket.username = username;
-    console.log('user joined lobby:', username);
-    // add the client's username to the global list
-    usernames.push(username);
-    numUsers++;
+  socket.on('start game', function () {
+    Game.startGame(usernames, function (game) {
+      currentGame = game;
+      socket.broadcast.emit('start round', game.currentRound());
+      socket.emit('start round', game.currentRound());
+      // socket.in(socket.user.uuid).emit('new_msg', {msg: 'hello'});
+    });
+  });
 
-    socket.emit('login', {
-      username: username,
-      numUsers: numUsers,
+  socket.on('join lobby', function (username) {
+    console.log('user joined lobby:', username, socket.username);
+    // add the client's username to the global list
+    var user = {username: username};
+    socket.username = user;
+    usernames.push(user);
+
+    socket.emit('user joined', {
+      user: user,
+      numUsers: usernames.length,
       users: usernames
     });
 
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user list', {users: usernames});
-  });
-
-  socket.on('debug', function () {
-    socket.emit('receive debug', {
-      usernames: usernames,
-      gameStarted: gameStarted,
-      hashTags: hashTags,
-      tweet: tweet,
-      user: socket.user
-    });
   });
 
   socket.on('end round', function (data) {
@@ -154,7 +161,7 @@ exports.register = function(socket) {
     // echo globally that this client has left
     socket.broadcast.emit('user left', {
       username: socket.username,
-      numUsers: numUsers
+      numUsers: 0
     });
   });
 };

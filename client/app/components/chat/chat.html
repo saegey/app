@@ -7,7 +7,7 @@
     <ul scroll-glue class="chat-history">
       <li ng-repeat="message in chat.log track by $index">
         <div ng-class="{'chat-msg-system' : message.isSystem}">
-          <span class="chat-msg-name">{{message.user}}:</span>
+          <span class="chat-msg-name">{{message.user.username}}:</span>
           <span class="chat-msg-msg">{{message.message}}</span>
         </div>
       </li>

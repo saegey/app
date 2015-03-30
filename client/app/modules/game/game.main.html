@@ -10,7 +10,7 @@
       <ul class="list" ng-show="!gameState.gameStarted">
         <li ng-repeat="user in gameState.users track by $index"
             class="item">
-          <h3 class="user">{{user}}</h3>
+          <h3 class="user">{{user.username}}</h3>
         </li>
       </ul>
     </div>
@@ -36,7 +36,7 @@
       <a href="#" class="item"
          ng-click="gameState.submitHashtag(hashtag)"
          ng-repeat="hashtag in gameState.hashTags track by $index">
-        #{{hashtag.content}}
+        #{{hashtag.hashtag}}
       </a>
     </div>
 
@@ -47,8 +47,8 @@
         </div>
         <a href="#" class="item"
            ng-click="gameState.voteForHashtag(hashtag)"
-           ng-repeat="hashtag in gameState.hashTags track by $index">
-          #{{hashtag.hashtag.content}}
+           ng-repeat="hashtag in gameState.hashtags track by $index">
+          #{{hashtag.hashtag}}
         </a>
       </div>
     </div>

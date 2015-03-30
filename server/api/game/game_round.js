@@ -19,9 +19,12 @@ GameRound.newRound = function (users, tweet, judge, callback) {
   });
 }
 
-GameRound.prototype.userSubmitHashtag = function (user, hashtag) {
-  var index = _.findIndex(this.users, 'username', user.username);
-  this.users[index].submittedHashtag = hashtag;
+GameRound.prototype.userSubmitHashtag = function (hashtag) {
+  console.log('uers', this.users);
+  var index = _.findIndex(this.users, 'username.username', hashtag.username);
+  console.log(index);
+  this.users[1].submittedHashtag = 'fuck';
+  console.log('received hashtag', hashtag);
   return this.users[index];
 }
 
