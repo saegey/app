@@ -77,14 +77,13 @@ exports.register = function(socket) {
   }
 
   // when the client emits 'new message', this listens and executes
-  socket.on('submit hashtag', function (data) {
-    console.log(data);
+  socket.on('submit hashtag', function (user, hashtag) {
+    console.log('user', user)
+    console.log(hashtag);
     // we tell the client to execute 'new message'
-    currentGame.currentRound().userSubmitHashtag(data);
-    socket.broadcast.emit('send hashtag to judge', currentGame.currentRound());
-
+    currentGame.currentRound().userSubmitHashtag(user, hashtag);
     socket.broadcast.emit(
-      'judge is now voting',
+      'send hashtag to judge',
       currentGame.currentRound()
     );
 
@@ -104,6 +103,7 @@ exports.register = function(socket) {
   });
 
   socket.on('start game', function () {
+    console.log(usernames);
     Game.startGame(usernames, function (game) {
       currentGame = game;
       socket.broadcast.emit('start round', game.currentRound());
@@ -115,7 +115,7 @@ exports.register = function(socket) {
   socket.on('join lobby', function (username) {
     console.log('user joined lobby:', username, socket.username);
     // add the client's username to the global list
-    var user = {username: username};
+    var user = username;
     socket.username = user;
     usernames.push(user);
 

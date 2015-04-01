@@ -22,10 +22,14 @@ GameRound.newRound = function (users, tweet, judge, callback) {
 GameRound.prototype.userSubmitHashtag = function (submitUser, userHashtag) {
   this.users.forEach(function (user, index, users) {
     if (user.username === submitUser.username) {
+      console.log('found user that submitted tag')
       this.users[index].submittedHashtag = userHashtag;
+    } else {
+      console.log(users, submitUser)
     }
   }, this);
-  return userHashtag;
+  // this.users[0].submittedHashtag = "fuck"
+  return {user: submitUser, };
 }
 
 GameRound.prototype.checkIfAllTagsSubmitted = function () {

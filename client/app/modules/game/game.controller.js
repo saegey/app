@@ -83,6 +83,10 @@ angular.module('rehash-app')
     // Judge is now able to vote
     socket.on('judge is now voting', function (data) {
       console.log('judge is now voting', data);
+      if ($scope.gameState.isJudge) {
+        console.log('judge users', data.users);
+        $scope.gameState.submitUsers = data.users;
+      }
       $scope.gameState.voteEnabled = true;
     });
 
@@ -104,6 +108,7 @@ angular.module('rehash-app')
 
     // sets up round and check for who is the judge
     socket.on('start round', function (data) {
+      console.log('you are: ', $rootScope.username);
       console.log('data received "start round"', data);
       $scope.gameState.lastRoundWinner = data.lastRoundWinner;
 
@@ -125,7 +130,7 @@ angular.module('rehash-app')
       $scope.gameState.hasntVoted = true;
       $scope.gameState.gameStarted = true;
 
-      if ($rootScope.username === $scope.gameState.judge.username.username) {
+      if ($rootScope.username === $scope.gameState.judge.username) {
         $scope.gameState.hashTags = [];
         $scope.gameState.isJudge = true;
         console.log('your are the judge');
@@ -133,7 +138,7 @@ angular.module('rehash-app')
         console.log('user tags:', data.users[0].hashtags);
         $scope.gameState.hashTags = data.users[0].hashtags;
         $scope.gameState.isJudge = false;
-        console.log('judge is ' + $scope.gameState.judge);
+        console.log('judge is ', $scope.gameState.judge);
       }
       $scope.gameState.tweet = data.tweet;
     });
@@ -142,11 +147,11 @@ angular.module('rehash-app')
     $scope.gameState.submitHashtag = function (hashtag) {
       // Makes judge not able to vote yet
       $scope.gameState.voteEnabled = false;
-      hashtag.username = $rootScope.username;
+      var username = $rootScope.username;
       $scope.gameState.hasntVoted = false;
 
-      socket.emit('submit hashtag', hashtag);
-      console.log('data sent "submit hashtag"', hashtag);
+      socket.emit('submit hashtag', {username: username} , hashtag);
+      console.log('data sent "submit hashtag"', {username: username} , hashtag);
     };
 
     $scope.gameState.voteForHashtag = function (hashtag) {
