@@ -46,7 +46,7 @@
           Waiting for Votes
         </div>
         <a href="#" class="item"
-           ng-click="gameState.voteForHashtag(hashtag)"
+           ng-click="gameState.voteForHashtag(user.submittedHashtag)"
            ng-repeat="user in gameState.submitUsers track by $index"
            ng-if="user.submittedHashtag.hashtag">
           #{{user.submittedHashtag.hashtag}}

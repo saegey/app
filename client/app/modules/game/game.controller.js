@@ -155,7 +155,7 @@ angular.module('rehash-app')
     };
 
     $scope.gameState.voteForHashtag = function (hashtag) {
-      console.log('vote for hashtag sent', hashtag);
+      console.log('end round', hashtag);
       socket.emit('end round', hashtag);
     };
   });

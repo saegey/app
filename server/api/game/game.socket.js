@@ -17,69 +17,8 @@ var lastRoundWinner = null;
 var currentGame = null;
 
 exports.register = function(socket) {
-  function getNewJudge() {
-    return usernames[~~(Math.random() * usernames.length)];
-  }
-
-
-
-  function startRound(socket) {
-    judge = getNewJudge();
-    console.log('judge:', judge);
-    console.log('players in the game: ', usernames);
-
-    tweetSvc.getRandomTweet(function (tweets) {
-      tweet = tweets[Math.floor(Math.random() * tweets.length)];
-
-      console.log('tweet retrieved:', tweet);
-      hash_tag_by_user = [];
-      numHashtags = usernames.length * 5;
-
-      hashTagSvc.getHashTags(5, function (userHashTags) {
-        console.log("retrieving hashtags");
-        hash_tag_by_user = {};
-
-        usernames.forEach(function (username, index) {
-          var start = (index * 5) + 1;
-          hash_tag_by_user[username] = userHashTags.slice(
-            start,
-            start + 5
-          );
-        });
-
-        socket.broadcast.emit('start round', {
-          tweet: tweet,
-          hashtags: hash_tag_by_user,
-          judge: judge,
-          scores: scores,
-          lastRoundWinner: lastRoundWinner
-        });
-        // socket.in(socket.user.uuid).emit('new_msg', {msg: 'hello'});
-        socket.emit('start round', {
-          tweet: tweet,
-          hashtags: hash_tag_by_user,
-          judge: judge,
-          scores: scores
-        });
-      });
-    });
-  }
-
-  function startGame(socket) {
-    scores = [];
-    lastRoundWinner = null;
-
-    usernames.forEach(function (username) {
-      scores.push({username: username, score: 0});
-    });
-
-    startRound(socket);
-  }
-
   // when the client emits 'new message', this listens and executes
   socket.on('submit hashtag', function (user, hashtag) {
-    console.log('user', user)
-    console.log(hashtag);
     // we tell the client to execute 'new message'
     currentGame.currentRound().userSubmitHashtag(user, hashtag);
     socket.broadcast.emit(
@@ -95,11 +34,6 @@ exports.register = function(socket) {
     } else {
       console.log('not all votes in');
     }
-  });
-
-  socket.on('new round', function (data) {
-    console.log('new round', data);
-    startGame(socket);
   });
 
   socket.on('start game', function () {
@@ -131,19 +65,12 @@ exports.register = function(socket) {
 
   socket.on('end round', function (data) {
     console.log('end round', data);
-    lastRoundWinner = {
-      username: data.username,
-      hashtag: data.hashtag
-    };
-    hashTags = [];
-
-    scores.forEach(function (userScore) {
-      if (userScore.username === data.username) {
-        userScore.score++;
-      }
+    currentGame.currentRound().submitJudgeVote(data);
+    currentGame.newRound(function(game) {
+      currentGame = game;
+      socket.emit('start round', game.currentRound());
     });
-    console.log("scores: ", scores);
-    startRound(socket);
+    console.log('game output', currentGame);
   });
 
   // when the user disconnects.. perform this
