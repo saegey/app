@@ -45,12 +45,14 @@ GameRound.prototype.checkIfAllTagsSubmitted = function () {
 }
 
 GameRound.prototype.submitJudgeVote = function (voteHashtag) {
+  var self = this;
   var winnerIndex = _.findIndex(
-    this.users,
-    {submittedHashtag: voteHashtag},
-    false
+    self.users,
+    {submittedHashtag: voteHashtag}
   );
-  this.lastRoundWinner = this.users[winnerIndex];
+  self.lastRoundWinner = self.users[winnerIndex];
+  console.log('winnerIndex', winnerIndex);
+  console.log(self);
   return true;
 }
 

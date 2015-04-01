@@ -66,24 +66,27 @@ exports.register = function(socket) {
   socket.on('end round', function (data) {
     console.log('end round', data);
     currentGame.currentRound().submitJudgeVote(data);
+    var lastRound = currentGame.currentRound();
     currentGame.newRound(function(game) {
       currentGame = game;
-      socket.emit('start round', game.currentRound());
+      console.log(game.rounds[0]);
+      socket.emit('start round', game.currentRound(), lastRound);
+      socket.broadcast.emit('start round', game.currentRound(), lastRound);
     });
-    console.log('game output', currentGame);
+    // console.log('game output', currentGame);
   });
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
     // remove the username from global usernames list
     _.pull(usernames, socket.username);
-    numUsers--;
+    // numUsers--;
 
-    if (numUsers === 1) {
-      socket.broadcast.emit('send to lobby', usernames);
-    } else if (socket.username === judge) {
-      startRound(socket);
-    }
+    // if (numUsers === 1) {
+    //   socket.broadcast.emit('send to lobby', usernames);
+    // } else if (socket.username === judge) {
+    //   startRound(socket);
+    // }
 
     // echo globally that this client has left
     socket.broadcast.emit('user left', {

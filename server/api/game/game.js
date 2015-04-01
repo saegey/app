@@ -43,10 +43,15 @@ Game.prototype.currentRound = function () {
 
 Game.prototype.newRound = function (callback) {
   var self = this;
+  if ((self.users.length - 1) === self.currentJudgeIndex) {
+    self.currentJudgeIndex = 0;
+  } else {
+    self.currentJudgeIndex++;
+  }
   GameRound.newRound(
     Game.resetUsers(self.users),
     self.tweets[self.tweetIndex + 1],
-    self.users[self.currentJudgeIndex + 1],
+    self.users[self.currentJudgeIndex],
     function (round) {
       self.rounds.push(round);
       return callback(self);

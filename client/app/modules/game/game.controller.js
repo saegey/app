@@ -107,28 +107,29 @@ angular.module('rehash-app')
     };
 
     // sets up round and check for who is the judge
-    socket.on('start round', function (data) {
+    socket.on('start round', function (data, lastRound) {
       console.log('you are: ', $rootScope.username);
       console.log('data received "start round"', data);
-      $scope.gameState.lastRoundWinner = data.lastRoundWinner;
+      if (lastRound) {
+        $scope.gameState.lastRoundWinner = lastRound.lastRoundWinner;
+        console.log('last round', lastRound);
+      }
 
-      if ($scope.gameState.lastRoundWinner) {
+      if (lastRound && $scope.gameState.lastRoundWinner) {
         var winner = $scope.gameState.lastRoundWinner;
 
         chatService.sendMessage({
-           'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.hashtag.content,
+           'body'     : 'Winner: ' + winner.username + ' - Tweet: #' + winner.submittedHashtag.hashtag,
            'isSystem' : true
         });
       }
 
-      $timeout(function () {
-        console.log('hide last round winner');
-        $scope.gameState.lastRoundWinner = false;
-      }, 12000);
       $scope.gameState.voteEnabled = false;
       $scope.gameState.judge = data.judge;
       $scope.gameState.hasntVoted = true;
       $scope.gameState.gameStarted = true;
+
+      console.log('username', $rootScope.username, 'judge', $scope.gameState.judge.username);
 
       if ($rootScope.username === $scope.gameState.judge.username) {
         $scope.gameState.hashTags = [];
