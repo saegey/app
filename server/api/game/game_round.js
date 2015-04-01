@@ -19,13 +19,13 @@ GameRound.newRound = function (users, tweet, judge, callback) {
   });
 }
 
-GameRound.prototype.userSubmitHashtag = function (hashtag) {
-  console.log('uers', this.users);
-  var index = _.findIndex(this.users, 'username.username', hashtag.username);
-  console.log(index);
-  this.users[1].submittedHashtag = 'fuck';
-  console.log('received hashtag', hashtag);
-  return this.users[index];
+GameRound.prototype.userSubmitHashtag = function (submitUser, userHashtag) {
+  this.users.forEach(function (user, index, users) {
+    if (user.username === submitUser.username) {
+      this.users[index].submittedHashtag = userHashtag;
+    }
+  }, this);
+  return userHashtag;
 }
 
 GameRound.prototype.checkIfAllTagsSubmitted = function () {

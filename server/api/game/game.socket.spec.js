@@ -71,16 +71,11 @@ describe("Game", function () {
       game.currentRound().userSubmitHashtag(users[2], {hashtag: "test tag1"});
       game.currentRound().submitJudgeVote({hashtag: "test tag"});
       game.newRound(function (game) {
-        // console.log(game.currentRound());
         assert.equal(game.currentRound().judge.username, 'john');
         assert.equal(game.rounds.length, 2);
         assert.equal(game.currentRound().users.length, 3);
         assert.equal(game.currentRound().users[0].hashtags.length, 5);
         assert.equal(game.currentRound().users[2].hashtags.length, 5);
-        assert.equal(
-          game.rounds[game.rounds.length - 2].lastRoundWinner.username,
-          users[1].username
-        );
         done();
       });
     });
@@ -124,15 +119,13 @@ describe("Game", function () {
     it("it should submit hashtag for john", function (done) {
       GameRound.newRound(users, TweetMock, users[0], function(r) {
         var user = r.userSubmitHashtag(users[1], {hashtag: "test tag"});
-        assert.equal(user.username, 'john');
-        assert.equal(user.submittedHashtag.hashtag, 'test tag');
+        assert.equal(r.users[1].submittedHashtag.hashtag, 'test tag');
         done();
       });
     });
 
     it("it should return false if not all tags have been submitted", function (done) {
       GameRound.newRound(users, TweetMock, users[0], function(r) {
-        // console.log('var users', users);
         r.userSubmitHashtag(users[1], {hashtag: "test tag"});
         assert.equal(r.checkIfAllTagsSubmitted(), false);
         done();
