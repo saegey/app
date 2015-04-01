@@ -110,6 +110,7 @@ angular.module('rehash-app')
     socket.on('start round', function (data, lastRound) {
       console.log('you are: ', $rootScope.username);
       console.log('data received "start round"', data);
+      $scope.gameState.submitUsers = [];
       if (lastRound) {
         $scope.gameState.lastRoundWinner = lastRound.lastRoundWinner;
         console.log('last round', lastRound);
